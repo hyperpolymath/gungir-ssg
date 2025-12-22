@@ -1,6 +1,16 @@
 ;;; STATE.scm — gungir-ssg
 ;; SPDX-License-Identifier: AGPL-3.0-or-later
 ;; SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
+;;; STATE.scm — gungir-ssg
+;;; Project state tracking with 44/44 component model
+
+(define-module (gungir-ssg state)
+  #:export (metadata current-position component-status blockers-and-issues
+            critical-next-actions session-history state-summary))
+
+;;;; ═══════════════════════════════════════════════════════════════════════════
+;;;; METADATA
+;;;; ═══════════════════════════════════════════════════════════════════════════
 
 (define metadata
   '((version . "0.2.0") (updated . "2025-12-17") (project . "gungir-ssg")))

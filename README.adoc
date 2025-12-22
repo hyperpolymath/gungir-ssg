@@ -1,1 +1,239 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
+= gungir-ssg
+:toc: preamble
+:toclevels: 2
+:icons: font
+:source-highlighter: rouge
+:experimental:
 
+*Unified SSG adapter collection for polyglot static site generation*
+
+image:https://img.shields.io/badge/adapters-28-blue[Adapters]
+image:https://img.shields.io/badge/languages-17-green[Languages]
+image:https://img.shields.io/badge/RSR-Gold-gold[RSR Gold]
+image:https://img.shields.io/badge/MCP-compatible-purple[MCP Compatible]
+
+'''
+
+== Overview
+
+gungir-ssg provides a unified interface to *28 static site generators* across *17 programming languages*, enabling polyglot SSG operations via the Model Context Protocol (MCP).
+
+[cols="1,3"]
+|===
+|Hub |https://github.com/hyperpolymath/poly-ssg-mcp[poly-ssg-mcp]
+|Type |Satellite project
+|Runtime |Deno 2.1+
+|Protocol |MCP (Model Context Protocol)
+|Compliance |RSR Gold
+|===
+
+== Supported SSGs
+
+[cols="2,1,3"]
+|===
+|SSG |Language |Description
+
+|**Zola** |Rust |Fast SSG with built-in Sass and syntax highlighting
+|**Hakyll** |Haskell |Pandoc-powered functional SSG
+|**mdBook** |Rust |Documentation/book generator
+|**Serum** |Elixir |Simple, extensible SSG
+|**Cryogen** |Clojure |Blog-focused SSG
+|**Franklin.jl** |Julia |Scientific/technical documentation
+|**Frog** |Racket |Racket-powered blogging
+|**Pollen** |Racket |Programmable publishing
+|**Cobalt** |Rust |Straightforward static sites
+|**Ema** |Haskell |Hot-reloading SSG
+|_...and 18 more_ |Various |See `adapters/README.md`
+|===
+
+== Quick Start
+
+=== Prerequisites
+
+[source,bash]
+----
+# Install Deno (required)
+curl -fsSL https://deno.land/install.sh | sh
+
+# Install just (recommended)
+cargo install just
+# or: brew install just
+----
+
+=== Installation
+
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/gungir-ssg.git
+cd gungir-ssg
+
+# Verify setup
+just health-check
+
+# List available adapters
+just list-adapters
+----
+
+=== Basic Usage
+
+[source,javascript]
+----
+// Import an adapter
+import * as zola from "./adapters/zola.js";
+
+// Connect to the SSG
+await zola.connect();
+
+// Use a tool
+const result = await zola.tools
+  .find(t => t.name === "zola_build")
+  .execute({ path: "./my-site", drafts: true });
+
+console.log(result);
+
+// Disconnect
+await zola.disconnect();
+----
+
+== Architecture
+
+----
+gungir-ssg (satellite)
+    │
+    ├── adapters/          # 28 SSG adapters
+    │   ├── zola.js
+    │   ├── hakyll.js
+    │   └── ...
+    │
+    ├── *.scm              # SCM metadata files
+    │   ├── META.scm       # Architecture decisions
+    │   ├── ECOSYSTEM.scm  # Project relationships
+    │   ├── STATE.scm      # Progress tracking
+    │   ├── PLAYBOOK.scm   # Operations runbook
+    │   ├── AGENTIC.scm    # AI integration
+    │   └── NEUROSYM.scm   # Symbolic patterns
+    │
+    └── poly-ssg-mcp (hub) # Upstream adapter source
+----
+
+== Adapter Interface
+
+Each adapter exports:
+
+[source,javascript]
+----
+export const name = "SSGName";
+export const language = "Language";
+export const description = "Description";
+
+export async function connect(): Promise<boolean>;
+export async function disconnect(): Promise<void>;
+export function isConnected(): boolean;
+
+export const tools = [
+  {
+    name: "ssg_operation",
+    description: "Operation description",
+    inputSchema: { /* JSON Schema */ },
+    execute: async (args) => { /* implementation */ }
+  }
+];
+----
+
+== Development
+
+=== Commands
+
+[source,bash]
+----
+# Format code
+just fmt
+
+# Lint code
+just lint
+
+# Run tests
+just test
+
+# Run all checks
+just check
+
+# Verify all adapters
+just verify-all-adapters
+----
+
+=== Testing
+
+[source,bash]
+----
+# Unit tests
+just test
+
+# E2E tests
+just test-e2e
+
+# Coverage report
+just test-coverage
+----
+
+=== CI/CD
+
+The project uses GitHub Actions with:
+
+* SHA-pinned actions (RSR compliance)
+* Automated linting and formatting
+* SPDX header verification
+* Security scanning (CodeQL)
+* Adapter verification
+
+== Security
+
+* All commands use array arguments (no shell injection)
+* Environment variables for credentials
+* Deno permission model enforced
+* Weekly CodeQL scanning
+* Dependabot enabled
+
+Report vulnerabilities via https://github.com/hyperpolymath/gungir-ssg/security/advisories/new[GitHub Security Advisories].
+
+== Documentation
+
+[cols="1,2"]
+|===
+|Document |Purpose
+
+|link:cookbook.adoc[Cookbook]
+|Recipes for common operations
+
+|link:SECURITY.md[Security Policy]
+|Vulnerability reporting
+
+|link:CONTRIBUTING.md[Contributing]
+|How to contribute
+
+|link:adapters/README.md[Adapters]
+|Full adapter list
+|===
+
+== Ecosystem
+
+gungir-ssg is part of the https://github.com/hyperpolymath[hyperpolymath] ecosystem:
+
+* **poly-ssg-mcp** — Hub providing SSG adapters via MCP
+* **rhodium-standard-repositories** — RSR compliance guidelines
+* **noteg-ssg** — Note G language SSG implementation
+
+== Licence
+
+AGPL-3.0-or-later — See link:LICENSE.txt[LICENSE.txt]
+
+Copyright (C) 2025 Jonathan D.A. Jewell
+
+== Links
+
+* https://github.com/hyperpolymath/gungir-ssg[Repository]
+* https://github.com/hyperpolymath/poly-ssg-mcp[Hub: poly-ssg-mcp]
+* https://github.com/hyperpolymath/rhodium-standard-repositories[RSR Standard]
+* https://deno.land/[Deno Runtime]
