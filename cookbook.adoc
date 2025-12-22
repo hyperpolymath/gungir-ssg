@@ -1,0 +1,508 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
+= gungir-ssg Cookbook
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: rouge
+
+== Overview
+
+This cookbook provides recipes for common operations with gungir-ssg, including CLI commands, justfile recipes, Mustfile checks, and advanced patterns.
+
+'''
+
+[#cli]
+== CLI Reference
+
+=== Deno Commands
+
+[cols="1,2,1"]
+|===
+|Command |Description |Example
+
+|`deno fmt`
+|Format JavaScript files
+|`deno fmt adapters/*.js`
+
+|`deno lint`
+|Lint JavaScript files
+|`deno lint adapters/*.js`
+
+|`deno test`
+|Run tests
+|`deno test --allow-run tests/`
+
+|`deno eval`
+|Evaluate inline code
+|`deno eval "import * as a from './adapters/zola.js'"`
+
+|`deno run`
+|Run a script
+|`deno run --allow-run script.ts`
+|===
+
+=== Git Operations
+
+[source,bash]
+----
+# Check repository status
+git status
+
+# Create feature branch
+git checkout -b feature/new-adapter
+
+# Commit with conventional message
+git commit -m "feat(adapters): add new-ssg adapter"
+
+# Push with upstream tracking
+git push -u origin feature/new-adapter
+----
+
+=== GitHub CLI
+
+[source,bash]
+----
+# Create pull request
+gh pr create --title "Add new adapter" --body "Description here"
+
+# View workflow runs
+gh run list
+
+# View security advisories
+gh api repos/hyperpolymath/gungir-ssg/security-advisories
+----
+
+'''
+
+[#just]
+== Justfile Recipes
+
+=== Development
+
+[source,bash]
+----
+# Format all adapter files
+just fmt
+
+# Check formatting without changes
+just fmt-check
+
+# Run linter
+just lint
+
+# Run all checks
+just check
+----
+
+=== Testing
+
+[source,bash]
+----
+# Run unit tests
+just test
+
+# Run tests with coverage
+just test-coverage
+
+# Run end-to-end tests
+just test-e2e
+
+# Run all tests
+just test-all
+
+# Test specific adapter
+just test-adapter zola
+----
+
+=== Adapter Operations
+
+[source,bash]
+----
+# List all adapters
+just list-adapters
+
+# Verify single adapter
+just verify-adapter hakyll
+
+# Verify all adapters
+just verify-all-adapters
+
+# Sync from hub
+just sync
+----
+
+=== Build & Release
+
+[source,bash]
+----
+# Clean build artifacts
+just clean
+
+# Bump version (major/minor/patch)
+just version patch
+
+# Pre-release checks
+just pre-release-check
+
+# Create release
+just release v0.3.0
+----
+
+=== CI & Hooks
+
+[source,bash]
+----
+# Run full CI pipeline locally
+just ci
+
+# Run must-pass checks
+just must
+
+# Install git hooks
+just hooks-install
+
+# Uninstall git hooks
+just hooks-uninstall
+----
+
+=== Utilities
+
+[source,bash]
+----
+# Show project status
+just status
+
+# Health check
+just health-check
+
+# Setup development environment
+just setup
+
+# Show adapter language stats
+just stats
+----
+
+'''
+
+[#must]
+== Mustfile Checks
+
+The Mustfile defines mandatory checks that *must* pass before merge or release.
+
+=== Running All Checks
+
+[source,bash]
+----
+# Via just
+just must
+
+# Directly (if make-compatible)
+make -f Mustfile all
+----
+
+=== Individual Checks
+
+[cols="1,2"]
+|===
+|Check |Purpose
+
+|`spdx`
+|Verify SPDX headers present in all files
+
+|`lint`
+|Run Deno linter
+
+|`fmt`
+|Check code formatting
+
+|`test`
+|Run test suite
+
+|`adapters`
+|Verify adapter count and exports
+
+|`security`
+|Check for security anti-patterns
+|===
+
+=== CI Integration
+
+[source,bash]
+----
+# Full CI check
+make -f Mustfile ci
+
+# Pre-commit hook
+make -f Mustfile pre-commit
+
+# Pre-push hook
+make -f Mustfile pre-push
+
+# Pre-release comprehensive
+make -f Mustfile pre-release
+----
+
+'''
+
+[#nickel]
+== Nickel Formulae
+
+NOTE: Nickel configuration is planned for future versions.
+
+=== Planned Nickel Integration
+
+[source,nickel]
+----
+# Future: nickel/adapters.ncl
+{
+  adapters = {
+    count = 28,
+    languages = [
+      "Rust", "Haskell", "Elixir", "Clojure",
+      "Julia", "Racket", "Scala", "OCaml"
+      # ... more
+    ],
+
+    validate = fun adapter =>
+      adapter.name != "" &&
+      adapter.language != "" &&
+      std.array.length adapter.tools > 0
+  }
+}
+----
+
+'''
+
+[#patterns]
+== Common Patterns
+
+=== Adding a New Adapter
+
+. Create adapter file:
++
+[source,bash]
+----
+cat > adapters/newssg.js << 'EOF'
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
+
+export const name = "NewSSG";
+export const language = "Language";
+export const description = "Description here";
+
+let connected = false;
+
+export async function connect() {
+  // Connection logic
+  connected = true;
+  return connected;
+}
+
+export async function disconnect() {
+  connected = false;
+}
+
+export function isConnected() {
+  return connected;
+}
+
+export const tools = [
+  {
+    name: "newssg_build",
+    description: "Build the site",
+    inputSchema: {
+      type: "object",
+      properties: {
+        path: { type: "string", description: "Project path" }
+      }
+    },
+    execute: async ({ path }) => {
+      // Implementation
+    }
+  }
+];
+EOF
+----
+
+. Verify the adapter:
++
+[source,bash]
+----
+just verify-adapter newssg
+----
+
+. Add tests:
++
+[source,bash]
+----
+# tests/newssg.test.js
+----
+
+. Update documentation:
++
+[source,bash]
+----
+# Update adapters/README.md
+# Update META.scm language-matrix
+# Update STATE.scm adapter count
+----
+
+=== Running Adapter Commands
+
+[source,javascript]
+----
+// Example: Using Zola adapter
+import * as zola from "./adapters/zola.js";
+
+// Connect
+await zola.connect();
+
+// Build site
+const result = await zola.tools
+  .find(t => t.name === "zola_build")
+  .execute({ path: "./my-site", drafts: true });
+
+console.log(result);
+
+// Disconnect
+await zola.disconnect();
+----
+
+=== Debugging Adapter Issues
+
+[source,bash]
+----
+# Check if SSG binary is available
+which zola
+
+# Check version
+zola --version
+
+# Test adapter connection
+deno eval "
+  import * as z from './adapters/zola.js';
+  console.log('Connected:', await z.connect());
+"
+
+# Run with verbose output
+DEBUG=true deno run --allow-run test-adapter.js
+----
+
+'''
+
+[#security]
+== Security Recipes
+
+=== Pre-Commit Security Check
+
+[source,bash]
+----
+# Check for secrets before committing
+git diff --cached --name-only | xargs grep -l -E "(api_key|password|secret)" || true
+----
+
+=== Audit Dependencies
+
+[source,bash]
+----
+# Check for known vulnerabilities (when using imports)
+deno info --json | jq '.modules[].specifier'
+----
+
+=== Validate Command Arguments
+
+[source,javascript]
+----
+// Always use array args, never shell strings
+const cmd = new Deno.Command("zola", {
+  args: ["build", "--drafts"],  // ✓ Safe
+  // NOT: `zola build ${userInput}`  // ✗ Unsafe
+});
+----
+
+'''
+
+[#troubleshooting]
+== Troubleshooting
+
+=== Common Issues
+
+[cols="1,2,2"]
+|===
+|Issue |Cause |Solution
+
+|Adapter connection fails
+|SSG binary not in PATH
+|Install SSG and verify: `which <binary>`
+
+|Permission denied
+|Missing Deno flags
+|Add `--allow-run`, `--allow-read`
+
+|Test failures
+|Deno version mismatch
+|Check `.tool-versions`, run `asdf install`
+
+|CI workflow fails
+|SHA pin outdated
+|Update action SHA in workflow
+|===
+
+=== Debug Mode
+
+[source,bash]
+----
+# Enable debug output
+DEBUG=true just test
+
+# Verbose Deno output
+deno test --allow-run --unstable-verbose tests/
+----
+
+'''
+
+[#appendix]
+== Appendix
+
+=== Full Recipe List
+
+[source,bash]
+----
+$ just --list
+Available recipes:
+    default          # Show help
+    fmt              # Format files
+    lint             # Lint files
+    check            # Run all checks
+    test             # Run unit tests
+    test-coverage    # Run tests with coverage
+    test-e2e         # Run e2e tests
+    test-all         # Run all tests
+    list-adapters    # List adapters
+    verify-adapter   # Verify single adapter
+    verify-all       # Verify all adapters
+    sync             # Sync from hub
+    build            # Build (no-op)
+    clean            # Clean artifacts
+    version          # Bump version
+    pre-release      # Pre-release checks
+    release          # Create release
+    ci               # Run CI locally
+    must             # Run must checks
+    status           # Show status
+    health-check     # Check environment
+    setup            # Setup dev env
+    stats            # Language stats
+    hooks-install    # Install git hooks
+    hooks-uninstall  # Remove git hooks
+----
+
+=== Links
+
+* https://github.com/hyperpolymath/gungir-ssg[Repository]
+* https://github.com/hyperpolymath/poly-ssg-mcp[Hub: poly-ssg-mcp]
+* https://github.com/hyperpolymath/rhodium-standard-repositories[RSR Standard]
+* https://deno.land/[Deno Runtime]
+* https://just.systems/[Just Command Runner]
