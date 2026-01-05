@@ -2,17 +2,16 @@
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "name": "@hyperpolymath/gungir-ssg",
   "version": "0.3.0",
-  "exports": "./mod.ts",
+  "exports": "./src/Main.res.js",
   "tasks": {
-    "fmt": "deno fmt adapters/*.js",
-    "fmt:check": "deno fmt --check adapters/*.js",
-    "lint": "deno lint adapters/*.js",
+    "build": "deno run -A npm:rescript build",
+    "watch": "deno run -A npm:rescript build -w",
+    "start": "deno run --allow-all src/Main.res.js",
+    "dev": "deno run --watch --allow-all src/Main.res.js",
     "test": "deno test --allow-run --allow-read tests/",
-    "test:coverage": "deno test --allow-run --allow-read --coverage=coverage/ tests/",
-    "test:e2e": "deno test --allow-run --allow-read --allow-write tests/e2e/",
-    "check": "deno task fmt:check && deno task lint",
-    "ci": "deno task check && deno task test"
+    "ci": "deno task build && deno task test"
   },
+  "nodeModulesDir": "none",
   "fmt": {
     "useTabs": false,
     "lineWidth": 100,
