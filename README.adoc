@@ -1,6 +1,10 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+image:https://img.shields.io/badge/license-PMPL--1.0-blue.svg[License,link="https://github.com/hyperpolymath/palimpsest-license"]
+// SPDX-License-Identifier: PMPL-1.0
 // SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
 = Gungir-SSG
+
+
+
 :toc: preamble
 :toclevels: 2
 :icons: font
@@ -10,7 +14,6 @@
 *Static site generator in Odin — data-oriented publishing with predictable performance*
 
 image:https://img.shields.io/badge/language-Odin-blue[Odin]
-image:https://img.shields.io/badge/license-AGPL--3.0--or--later-green[License]
 image:https://img.shields.io/badge/MCP-compatible-purple[MCP Compatible]
 
 '''
@@ -122,7 +125,7 @@ The poly-mcp portfolio (https://github.com/hyperpolymath[hyperpolymath]) provide
 
 == Licence
 
-AGPL-3.0-or-later — See link:LICENSE.txt[LICENSE.txt]
+PMPL-1.0-or-later — See link:LICENSE.txt[LICENSE.txt]
 
 Copyright (C) 2025 Jonathan D.A. Jewell
 
